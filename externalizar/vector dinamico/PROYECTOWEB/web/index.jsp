@@ -21,7 +21,7 @@
         <li><a href="ejercicios/calculoCirculo.jsp">area y perimetro circulo</a></li>
         <li><a href="ejercicios/matrizAMedida.jsp">Matriz a medida</a></li>
         <li><a href="baseatos/mostrar.jsp">mostrar registros alumnos</a></li>
-        <li><a href="baseatos/comboboxAlumnos.jsp">sql con boton redondo</a></li>
+        <li><a href="baseatos/comboboxAlumnos.jsp">sql con lista</a></li>
         <li><a href="componentes/combobox.jsp">calculadora</a></li>
         <li><a href="componentes/botonredondo.jsp">calculadora con boton</a></li>
     </ul>

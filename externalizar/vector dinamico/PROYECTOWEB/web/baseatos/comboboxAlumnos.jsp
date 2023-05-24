@@ -3,85 +3,87 @@
 <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.Connection"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>JSP Page</title>
+    <script>
+        function submitForm() {
+            document.getElementById("myForm").submit();
+        }
+    </script>
 </head>
 <body>
-    <h1>COMBOBOX ALUMNOS</h1>
+    <h1>COMBOBOX CON EL IDALUMNO</h1>
+
     <%
-    Class.forName("com.mysql.jdbc.Driver");
-    String url = "jdbc:mysql://localhost:3306/instituto";
-    String user = "root";
-    String password = "";
-    Connection conexion = null;
-    String opcion = request.getParameter("lista");
-    try {
-        conexion = DriverManager.getConnection(url, user, password);
+        // CONEXION
+        String url = "jdbc:mysql://127.0.0.1:3306/instituto";
+        String usuario = "root";
+        String clave = "";
+        Connection conexion = null;
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        conexion = DriverManager.getConnection(url, usuario, clave);
+        // PROCESAR LA ACCION DEL BOTON
+        String idAlumno = "";
+        String nombre = "";
+        String edad = "";
+        String estatura = "";
+        if (request.getParameter("idAlumno") != null) {
+            try {
+                idAlumno = request.getParameter("idAlumno").trim();
+                String query1 = "SELECT * FROM Alumno WHERE idAlumno = ?";
+                PreparedStatement ps1 = conexion.prepareStatement(query1);
+                ps1.setInt(1, Integer.parseInt(idAlumno));
+                ResultSet rs1 = ps1.executeQuery();
+                while (rs1.next()) {
+                    nombre = rs1.getString("nombre");
+                    edad = rs1.getInt("edad") + "";
+                    estatura = rs1.getDouble("estatura") + "";
+                }
+            } catch (Exception e) {
+                nombre = "ERROR";
+            }
+        }
+        if (request.getParameter("actualizar") != null) {
+            idAlumno = request.getParameter("idAlumno");
+            nombre = request.getParameter("nombre");
+            edad = request.getParameter("edad");
+            estatura = request.getParameter("estatura");
+            String query = "UPDATE Alumno SET nombre = ?, edad = ?, estatura = ? WHERE idAlumno = ?";
+            PreparedStatement ps2 = conexion.prepareStatement(query);
+            ps2.setString(1, nombre);
+            ps2.setInt(2, Integer.parseInt(edad));
+            ps2.setDouble(3, Double.parseDouble(estatura));
+            ps2.setInt(4, Integer.parseInt(idAlumno));
+            ps2.executeUpdate();
+        }
+    %>
+    <!-- PINTAR EL FORMULARIO -->
+    <%
         String query = "SELECT idAlumno FROM Alumno";
         PreparedStatement ps = conexion.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
-        %>
-        <form>
-        <select name='lista' onchange='this.form.submit()'>
-        <%
-        while (rs.next()) {
-            int idAlumno = rs.getInt("idAlumno");
-            out.print("<option value='" + idAlumno + "'" +">" + idAlumno + "</option>");
-        }
-        %>
+    %>
+    <form id="myForm" action="">
+        <select name="idAlumno" onchange="submitForm()">
+            <%
+                while (rs.next()) {
+                    int idAlumno1 = rs.getInt("idAlumno");
+                    if (idAlumno.equalsIgnoreCase(idAlumno1 + "")) {
+                        out.print("<option selected='true' value='" + idAlumno1 + "'>" + idAlumno1 + "</option>");
+                    } else {
+                        out.print("<option value='" + idAlumno1 + "'>" + idAlumno1 + "</option>");
+                    }
+                }
+            %>
         </select>
-        </form>
-        <%
-    } catch (Exception e) {
-        out.println("Error: " + e.getMessage());
-    }
-    if (opcion != null) {
-        try {
-            String queryDatos = "SELECT nombre, edad, estatura FROM Alumno WHERE idAlumno = ?";
-            PreparedStatement psDatos = conexion.prepareStatement(queryDatos);
-            psDatos.setString(1, opcion);
-            ResultSet rsDatos = psDatos.executeQuery();
-            if (rsDatos.next()) {
-                String nombre = rsDatos.getString("nombre");
-                int edad = rsDatos.getInt("edad");
-                String sedad=edad+" años";
-                double estatura = rsDatos.getDouble("estatura");
-                String sestatura=estatura+" m";
-    %>
-                <style>
-    .form-group {
-        display: inline-block;
-        margin-bottom: 1px;
-    }
-
-    .form-group label {
-        display: block;
-    }
-                </style>
-
-<div class="form-group">
-    <label for="nombre">Nombre:</label>
-    <input type="text" name="nombre" value="<%= nombre %>" size="4" disabled>
-</div>
-
-<div class="form-group">
-    <label for="edad">Edad:</label>
-    <input type="text" name="edad" value="<%= edad %>" size="4"disabled>
-</div>
-
-<div class="form-group">
-    <label for="estatura">Estatura:</label>
-    <input type="text" name="estatura" value="<%= sestatura %>" size="4"disabled>
-</div>
-    <%
-            }
-        } catch (Exception e) {
-            out.println("Error: " + e.getMessage());
-        }
-    }
-    %>
+        <input type="text" name="nombre" value="<%=nombre%>" placeholder="NOMBRE"/>
+        <input type="text" name="edad" value="<%=edad%>" placeholder="EDAD"/>
+        <input type="text" name="estatura" value="<%=estatura%>" placeholder="ESTATURA"/>
+        <input type="submit" name="actualizar" value="ACTUALIZAR" />
+    </form>
 </body>
 </html>
