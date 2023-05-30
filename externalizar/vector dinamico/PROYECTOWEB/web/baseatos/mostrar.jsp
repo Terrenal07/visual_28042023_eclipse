@@ -16,16 +16,27 @@
         <title>Página JSP</title>
     </head>
     <body>
-        <h1>Mostrar todos los registros de la tabla</h1>
+        <h1>Mostrar todos los registros de la tabla</h1>       
+<style>
+    .redondo {
+        width: 200px;
+        height: 200px;
+        border: 2px solid black;
+        border-radius: 100px;
+    }
+</style>
         <% // Comprueba si se ha enviado el parámetro "accion"
+            
             int id = 0;
-            String url = "jdbc:mysql://localhost:3306/instituto";
+            String url = "jdbc:mysql://localhost:3306/instituto2";
             String usuario = "root";
             String clave = "";
             String query = "";
             int idAlumno = 0;
             String nombre = "";
             int edad = 0;
+            String imagen="";
+            String ruta="";
             double altura = 0;
             Connection conexion = null;
             if (request.getParameter("accion") != null) {
@@ -40,11 +51,15 @@
                         nombre = rs.getString(2);
                         edad = rs.getInt(3);
                         altura = rs.getDouble(4);
+                        imagen=rs.getString(5);
+                        ruta = request.getContextPath() + "/baseatos/imagenes/archivos/" + "imagen";
+                        
         %>
         <input type="text" value="<%=idAlumno%>" placeholder="id" disabled/>
         <input type="text" value="<%=nombre%>" placeholder="nombre"  disabled/>
         <input type="text" value="<%=edad%>" placeholder="edad"  disabled/>
         <input type="text" value="<%=altura%>" placeholder="altura"  disabled/>
+        <img src="<%=ruta%>">
         <% 
                     }
                 } catch (Exception e) {
@@ -62,6 +77,7 @@
             }
         if (request.getParameter("accion2") != null && request.getParameter("id") != null) {
             try {
+                
                 id = Integer.parseInt(request.getParameter("id"));
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 conexion = DriverManager.getConnection(url, usuario, clave);
@@ -78,6 +94,7 @@
                         <input type="text" value="<%=nombre%>" placeholder="nombre"  disabled/>
                         <input type="text" value="<%=edad%>" placeholder="edad"  disabled/>
                         <input type="text" value="<%=altura%>" placeholder="altura"  disabled/>
+                        <img src="<%=ruta%>">
                         <% 
                 } else {
         %>
@@ -104,6 +121,7 @@
             <br>
             <input type="submit" name="accion2" value="Buscar por ID">
             <input type="text" name="id" value="" placeholder="ID">
+            <img src="<%=ruta%>">
         </form>
     </body>
 </html>

@@ -24,6 +24,7 @@
         <li><a href="baseatos/comboboxAlumnos.jsp">sql con lista</a></li>
         <li><a href="componentes/combobox.jsp">calculadora</a></li>
         <li><a href="componentes/botonredondo.jsp">calculadora con boton</a></li>
+        <li><a href="imagenes/imagenes.jsp">imagenes</a></li>
     </ul>
 </body>
 </html>

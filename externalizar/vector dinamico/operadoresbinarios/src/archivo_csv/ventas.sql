@@ -1,0 +1,17 @@
+-- 1. BORRAR UNA BASE DE DATOS SI ESTA EXISTE
+DROP DATABASE IF EXISTS Ventas;
+
+CREATE DATABASE Ventas;
+
+USE Ventas;
+
+DROP TABLE IF EXISTS Ventas;
+
+CREATE TABLE Transaccion (
+  idTransaccion INT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  ciudad        VARCHAR(25) NOT NULL,
+  zona          VARCHAR(25) NOT NULL,
+  ventas        DOUBLE      NOT NULL,
+  formaPago     VARCHAR(25) NOT NULL,
+  categoria     VARCHAR(25) NOT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

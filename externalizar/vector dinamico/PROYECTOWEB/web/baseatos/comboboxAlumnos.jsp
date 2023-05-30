@@ -17,10 +17,17 @@
 </head>
 <body>
     <h1>COMBOBOX CON EL IDALUMNO</h1>
-
+<style>
+    .redondo {
+        width: 75px;
+        height: 75px;
+        border: 2px solid black;
+        border-radius: 0px;
+    }
+</style>
     <%
         // CONEXION
-        String url = "jdbc:mysql://127.0.0.1:3306/instituto";
+        String url = "jdbc:mysql://127.0.0.1:3306/instituto2";
         String usuario = "root";
         String clave = "";
         Connection conexion = null;
@@ -31,8 +38,11 @@
         String nombre = "";
         String edad = "";
         String estatura = "";
+        String ruta="";
+        int fot=-1;
         if (request.getParameter("idAlumno") != null) {
             try {
+                fot=0;
                 idAlumno = request.getParameter("idAlumno").trim();
                 String query1 = "SELECT * FROM Alumno WHERE idAlumno = ?";
                 PreparedStatement ps1 = conexion.prepareStatement(query1);
@@ -42,6 +52,8 @@
                     nombre = rs1.getString("nombre");
                     edad = rs1.getInt("edad") + "";
                     estatura = rs1.getDouble("estatura") + "";
+                    String imagen=rs1.getString("imagen");
+                    ruta = request.getContextPath() + "/imagenes/archivos/" + imagen;
                 }
             } catch (Exception e) {
                 nombre = "ERROR";
@@ -68,6 +80,7 @@
         ResultSet rs = ps.executeQuery();
     %>
     <form id="myForm" action="">
+        <div style="display: flex; justify-content: center;">
         <select name="idAlumno" onchange="submitForm()">
             <%
                 while (rs.next()) {
@@ -80,10 +93,21 @@
                 }
             %>
         </select>
+        <div style="display: flex; justify-content: center;">
         <input type="text" name="nombre" value="<%=nombre%>" placeholder="NOMBRE"/>
         <input type="text" name="edad" value="<%=edad%>" placeholder="EDAD"/>
         <input type="text" name="estatura" value="<%=estatura%>" placeholder="ESTATURA"/>
+        <%
+            if (fot != -1) {
+        %>
+        <img class="redondo" src="<%= ruta%>">
+        <%
+            }
+        %>
         <input type="submit" name="actualizar" value="ACTUALIZAR" />
+        <br><br><br>
+    
+</div>
     </form>
 </body>
 </html>
